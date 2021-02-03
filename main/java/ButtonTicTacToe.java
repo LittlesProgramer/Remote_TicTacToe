@@ -1,3 +1,5 @@
-public class ButtonTicTacToe {
+import javax.swing.*;
+
+public class ButtonTicTacToe extends JButton {
 
 }
