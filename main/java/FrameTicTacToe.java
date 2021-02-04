@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FrameTicTacToe extends JFrame {
 
@@ -19,6 +24,7 @@ public class FrameTicTacToe extends JFrame {
     private JLabel resultGameLabel = new JLabel("result your game: ");
 
     public FrameTicTacToe() {
+        //Layout configuration ...
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         clinetOptionPanel.setLayout(layout);
@@ -43,6 +49,16 @@ public class FrameTicTacToe extends JFrame {
 
         this.add(resultGameLabel,new GBC(0,2,1,1).setWeight(10,10).setInsets(3).setAnchor(GBC.CENTER));
 
+        //functionality of program
+
+        connectingButton.addActionListener((actionEvent)->{
+            if(checkCorrect_Ip_Port_NickName(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText())){
+
+            }else{
+                JOptionPane.showMessageDialog(null,"Please insert correct ip,port and nick values");
+            }
+        });
+
     }
 
     public void addButtonIntoGamePanel(){
@@ -57,6 +73,52 @@ public class FrameTicTacToe extends JFrame {
             buttonTicTacToe.setPreferredSize(new Dimension(150,150));
             buttonTicTacToe.setBackground(Color.ORANGE);
         }
+    }
+
+    public boolean checkCorrect_Ip_Port_NickName(String ip,String port,String nick){
+        boolean correctIp = true;
+        boolean correctPort = true;
+        boolean correctNick = true;
+
+        Pattern pattern = Pattern.compile("(\\d{1,3}\\.){3}\\d{1,3}");
+        Matcher matcher = pattern.matcher(ip);
+
+        //checking correct ip values
+        if(matcher.matches()){
+            String ipTab[] = ip.split("\\.");
+            for(String el: ipTab){
+                int Ip = Integer.valueOf(el);
+                if(Ip < 0 || Ip > 255){
+                    correctIp = false;
+                    break;
+                }
+            }
+
+        }else{
+            correctIp = false;
+        }
+
+        //checking correct port values
+        Pattern patternPort = Pattern.compile("\\d{1,5}");
+        Matcher matcherPort = patternPort.matcher(port);
+
+        if(!port.equals("")) {
+            if (matcherPort.matches()) {
+                int Port = Integer.valueOf(port);
+                if (Port < 0 || Port > 65535) {
+                    correctPort = false;
+                }
+            }
+        }else{ correctPort = false; }
+
+        //checking correct nick name
+        if(nick.equals("")){
+            correctNick = false;
+        }
+
+        if(correctIp && correctPort && correctNick){
+            return true;
+        }else{ return false; }
     }
 }
 
