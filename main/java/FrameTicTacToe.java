@@ -15,7 +15,7 @@ public class FrameTicTacToe extends JFrame {
     private JPanel clinetOptionPanel = new JPanel();
     private JLabel connectingToServerLabel = new JLabel("connecting to server ...");
     private JButton connectingButton = new JButton("connect");
-    private JTextField showConnectingResult = new JTextField(10);
+    private static JTextField showConnectingResult = new JTextField(10);
 
     private JPanel gamePanel = new JPanel();
     private JLabel resultGameLabel = new JLabel("result your game: ");
@@ -50,7 +50,7 @@ public class FrameTicTacToe extends JFrame {
 
         connectingButton.addActionListener((actionEvent)->{
             if(checkCorrect_Ip_Port_NickName(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText())){
-
+                Client client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert correct ip,port and nick values");
             }
@@ -58,7 +58,7 @@ public class FrameTicTacToe extends JFrame {
 
     }
 
-    public void addButtonIntoGamePanel(){
+    public void addButtonIntoGamePanel(){ //this method add all button in game panel
         GridLayout gridLayout = new GridLayout(3,3);
         gamePanel.setLayout(gridLayout);
         int size = gridLayout.getColumns() * gridLayout.getRows();
@@ -72,7 +72,7 @@ public class FrameTicTacToe extends JFrame {
         }
     }
 
-    public boolean checkCorrect_Ip_Port_NickName(String ip,String port,String nick){
+    public boolean checkCorrect_Ip_Port_NickName(String ip,String port,String nick){ //this method checking correct inserted ip,port nad nick values
         boolean correctIp = true;
         boolean correctPort = true;
         boolean correctNick = true;
@@ -116,6 +116,10 @@ public class FrameTicTacToe extends JFrame {
         if(correctIp && correctPort && correctNick){
             return true;
         }else{ return false; }
+    }
+
+    public static JTextField getShowConnectionresult(){ //this method return JTextField showConnectingResult
+        return showConnectingResult;
     }
 }
 
