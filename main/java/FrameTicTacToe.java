@@ -25,8 +25,8 @@ public class FrameTicTacToe extends JFrame {
     private JPanel gamePanel = new JPanel();
     private JLabel resultGameLabel = new JLabel("result your game: ");
 
-    private static Map<ButtonTicTacToe,Integer> allButtonGameMap = new LinkedHashMap<>();
-    private static boolean YOUR_MOVE = false;
+    private static Map<ButtonTicTacToe,Integer> allButtonGameMap = new LinkedHashMap<>();//this map include all button and his number in the GamePanel
+    private static boolean YOUR_FIRST_MOVE = false; //if this variable is true draw cross figure, else is circle figure.
 
     public FrameTicTacToe() {
         //Layout configuration ...
@@ -61,11 +61,11 @@ public class FrameTicTacToe extends JFrame {
                 Client client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
 
                 if(Client.staticFirstMove()){
-                    YOUR_MOVE = true;
+                    YOUR_FIRST_MOVE = true;
                     resultGameLabel.setText("result your game: "+"Your first move cross");
 
                 }else{
-                    YOUR_MOVE = false;
+                    YOUR_FIRST_MOVE = false;
                     for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
                         el.getKey().setEnabled(false);
                     }
@@ -75,8 +75,12 @@ public class FrameTicTacToe extends JFrame {
 
                         Scanner scanner = new Scanner(clientSocket.getInputStream());
                         String opponetMove = scanner.nextLine();
+
                         for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
-                            el.getKey().setEnabled(false);
+                            if(el.getValue() == Integer.valueOf(opponetMove)) {
+                                el.getKey().rysujFigure("Cross");
+                                el.getKey().setEnabled(false);
+                            }
                         }
 
                     } catch (IOException e) {
@@ -156,6 +160,8 @@ public class FrameTicTacToe extends JFrame {
     public static JTextField getShowConnectionresult(){ //this method return JTextField showConnectingResult
         return showConnectingResult;
     }
+
+    public static boolean whoWasFirstMove(){ return YOUR_FIRST_MOVE; }//this method return variable who those is responsible for first move cross or circle
 }
 
 
