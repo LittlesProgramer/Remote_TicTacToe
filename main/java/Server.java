@@ -1,10 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
     public static void main(String[] args){
         EventQueue.invokeLater(()->{
-            ServerFrame frame = new ServerFrame();
+            ServerFrame frame = null;
+            try {
+                frame = new ServerFrame();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             frame.setTitle("Server Game TicTacToe");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
@@ -20,7 +28,7 @@ class ServerFrame extends JFrame {
     private JLabel loggedPlayersPanel = new JLabel("<html><h1>Info Panel Players</br></h1><hr></html>");
     private JTextArea playerInfoView = new JTextArea(10,35);
 
-    public ServerFrame() {
+    public ServerFrame() throws IOException {
         GridBagLayout gridBagLayout = new GridBagLayout();
         this.setLayout(gridBagLayout);
         panel.setLayout(gridBagLayout);
@@ -34,6 +42,16 @@ class ServerFrame extends JFrame {
         this.add(playerInfoView,new GBC(0,2,1,1).setWeight(10,10).setFill(GBC.BOTH).setInsets(5));
         playerInfoView.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         pack();
+
+        startServer.addActionListener((actionEvent)->{
+            ServerSocket serverSocket = null;
+            try {
+                serverSocket = new ServerSocket(12345);
+                Socket socket = serverSocket.accept();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
 

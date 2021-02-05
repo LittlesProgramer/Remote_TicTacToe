@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +24,9 @@ public class FrameTicTacToe extends JFrame {
 
     private JPanel gamePanel = new JPanel();
     private JLabel resultGameLabel = new JLabel("result your game: ");
+
+    private static Map<ButtonTicTacToe,Integer> allButtonGameMap = new LinkedHashMap<>();
+    private static boolean YOUR_MOVE = false;
 
     public FrameTicTacToe() {
         //Layout configuration ...
@@ -51,6 +59,31 @@ public class FrameTicTacToe extends JFrame {
         connectingButton.addActionListener((actionEvent)->{
             if(checkCorrect_Ip_Port_NickName(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText())){
                 Client client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
+
+                if(Client.staticFirstMove()){
+                    YOUR_MOVE = true;
+                    resultGameLabel.setText("result your game: "+"Your first move cross");
+
+                }else{
+                    YOUR_MOVE = false;
+                    for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
+                        el.getKey().setEnabled(false);
+                    }
+                    resultGameLabel.setText("result your game: "+"Your opponent move");
+                    Socket clientSocket = Client.getClientSocket();
+                    try {
+
+                        Scanner scanner = new Scanner(clientSocket.getInputStream());
+                        String opponetMove = scanner.nextLine();
+                        for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
+                            el.getKey().setEnabled(false);
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert correct ip,port and nick values");
             }
@@ -69,6 +102,8 @@ public class FrameTicTacToe extends JFrame {
             gamePanel.add(buttonTicTacToe);
             buttonTicTacToe.setPreferredSize(new Dimension(150,150));
             buttonTicTacToe.setBackground(Color.ORANGE);
+
+            allButtonGameMap.put(buttonTicTacToe,x);
         }
     }
 
