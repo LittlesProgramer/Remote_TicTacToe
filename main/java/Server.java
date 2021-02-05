@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -47,7 +48,12 @@ class ServerFrame extends JFrame {
             ServerSocket serverSocket = null;
             try {
                 serverSocket = new ServerSocket(12345);
+                System.out.println("waiting ...");
                 Socket socket = serverSocket.accept();
+                System.out.println("connect");
+                PrintWriter pr = new PrintWriter(socket.getOutputStream());
+                pr.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+                pr.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

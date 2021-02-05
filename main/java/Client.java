@@ -1,14 +1,15 @@
 import javax.swing.*;
 import java.io.IOException;
 import java.net.*;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Client {
     private String ipAddress = null;
     private String port = null;
     private String nickName = null;
-    private static boolean whoMoveFirst = false;
     private static Socket clientSocket = null;
+    private static boolean YOUR_FIRST_MOVE = false; //if this variable is true draw cross figure, else is circle figure.
 
     public Client(String ipAddress, String port, String nickName) {
         this.ipAddress = ipAddress;
@@ -28,15 +29,18 @@ public class Client {
         try {
             InetAddress inet = InetAddress.getByAddress(bytes);
             Socket client = new Socket();
+            clientSocket = client;
+
             FrameTicTacToe.getShowConnectionresult().setText("waiting ...");
             try {
                 client.connect(new InetSocketAddress(inet, port));
-                clientSocket = client;
                 FrameTicTacToe.getShowConnectionresult().setText("");
                 FrameTicTacToe.getShowConnectionresult().setText("connected");
 
                 Scanner sc = new Scanner(client.getInputStream());
-                whoFirstMove(sc.nextLine());
+                String startMove = sc.nextLine();//get started move from server
+                whoFirstMove(startMove);//set first move in YOUR_FIRST_MOVE variable get the first move from server
+                firstMove();//drawing your's Cross or your's opponent
 
             } catch (ConnectException connExc){
                 JOptionPane.showMessageDialog(null,"Client connection: "+connExc.getMessage());
@@ -49,12 +53,40 @@ public class Client {
         }
     }
 
-    public void whoFirstMove(String whoMoveIsNow){
-        if(whoMoveIsNow.equals("Start")){
-            whoMoveFirst = true;
-        }else{ whoMoveFirst = false; }
+    public void firstMove(){//this method generate first move drawing Cross depending on return value whoFirstMove() method
+
+        if(Client.whoWasFirstMove()){//if first move drawing your figure cross,now CROSS is YOUR BASE figure
+            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your first move cross");
+
+        }else{//if first move doing your opponent he drawing cross ,and your BASE figure is CIRCLE
+
+            for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){
+                el.getKey().setEnabled(false);
+            }
+
+            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your opponent move");
+
+            try {
+
+                Scanner scanner = new Scanner(clientSocket.getInputStream());
+                for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){//draw move your opponent on the button in GamePanel
+                    if(el.getValue() == Integer.valueOf(3)) {
+                        el.getKey().rysujFigure("Cross");
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
-    public static boolean staticFirstMove(){ return whoMoveFirst; }
-    public static Socket getClientSocket(){ return clientSocket; }
+    public void whoFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move
+        if(whoMoveIsNow.equals("Start")){
+            YOUR_FIRST_MOVE = true;
+        }else{ YOUR_FIRST_MOVE = false; }
+    }
+
+    public static boolean whoWasFirstMove(){ return YOUR_FIRST_MOVE; }//this method return variable who those is responsible for first move cross or circle(TRUE=CROSS)
 }
