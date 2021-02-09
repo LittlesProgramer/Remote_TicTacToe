@@ -73,13 +73,28 @@ public class FrameTicTacToe extends JFrame {
         int size = gridLayout.getColumns() * gridLayout.getRows();
 
         ButtonTicTacToe buttonTicTacToe = null;
-        for(int x = 0 ; x < size ; x++){
+        for(int x = 1 ; x < size ; x++){
             buttonTicTacToe = new ButtonTicTacToe();
             gamePanel.add(buttonTicTacToe);
             buttonTicTacToe.setPreferredSize(new Dimension(150,150));
             buttonTicTacToe.setBackground(Color.ORANGE);
             buttonTicTacToe.setOpaque(false);
             allButtonGameMap.put(buttonTicTacToe,x);
+            buttonTicTacToe.addActionListener(new YoursMoving(x));
+        }
+
+        enabledAllButtonOff();
+    }
+
+    public static void enabledAllButtonOff() {
+        for(ButtonTicTacToe el : allButtonGameMap.keySet()){
+            el.setEnabled(false);
+        }
+    }
+
+    public static void enabledAllButtonOn(){
+        for(ButtonTicTacToe el: allButtonGameMap.keySet()){
+            el.setEnabled(true);
         }
     }
 

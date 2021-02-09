@@ -1,9 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Server {
     public static void main(String[] args){
@@ -28,8 +27,15 @@ class ServerFrame extends JFrame {
     private JTextField startServerInfoView = new JTextField(35);
     private JLabel loggedPlayersPanel = new JLabel("<html><h1>Info Panel Players</br></h1><hr></html>");
     private JTextArea playerInfoView = new JTextArea(10,35);
+    private Map<Socket,String> socket_NickName_Map = new LinkedHashMap<>();
+    private Map<Thread,Map<Socket,String>> threadMapMap = new LinkedHashMap<>();
+    private static String firstLoggedPlayer = "";
+    private static boolean IS_YOUR_TURN = false;
+    private boolean THE_END = false;
+    private ServerFrame serverFrame = null;
 
     public ServerFrame() throws IOException {
+        serverFrame = this;
         GridBagLayout gridBagLayout = new GridBagLayout();
         this.setLayout(gridBagLayout);
         panel.setLayout(gridBagLayout);
@@ -45,19 +51,106 @@ class ServerFrame extends JFrame {
         pack();
 
         startServer.addActionListener((actionEvent)->{
-            ServerSocket serverSocket = null;
             try {
-                serverSocket = new ServerSocket(12345);
+                ServerSocket server = new ServerSocket(12345);
+                //server.bind(new InetSocketAddress("HP",12345));
                 System.out.println("waiting ...");
-                Socket socket = serverSocket.accept();
-                System.out.println("connect");
-                PrintWriter pr = new PrintWriter(socket.getOutputStream());
-                pr.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-                pr.flush();
+                Thread t = new Thread(()->{
+                    try {
+
+                        for(int x = 0 ; x < 2 ; x++){
+                            Socket socket = server.accept();
+                            System.out.println("connected...");
+                            Scanner sc = new Scanner(socket.getInputStream());
+                            String nickName = sc.nextLine();
+                            System.out.println("nicki = "+nickName);
+                            Thread connectClinet = new Thread(new ConnectedClinet(socket,nickName));
+                            socket_NickName_Map.put(socket,nickName);
+                            threadMapMap.put(connectClinet,socket_NickName_Map);
+
+                            if(x == 0){
+                                firstLoggedPlayer = nickName;
+                                IS_YOUR_TURN = true;
+                            }
+                        }
+
+                        for(int x = 0 ; x < 2 ; x++){
+                            if(x == 0){
+                                PrintWriter pr = new PrintWriter(((Socket)(socket_NickName_Map.keySet().toArray()[x])).getOutputStream());
+                                pr.println("Start");
+                                pr.flush();
+                            }else{
+                                PrintWriter pr = new PrintWriter(((Socket)(socket_NickName_Map.keySet().toArray()[x])).getOutputStream());
+                                pr.println("Czekaj");
+                                pr.flush();
+                            }
+                        }
+
+                        for(Map.Entry<Thread,Map<Socket,String>> el: threadMapMap.entrySet()){
+                            el.getKey().start();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                t.start();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    class ConnectedClinet implements Runnable{
+        private Socket socket = null;
+        private InputStream in = null;
+        private OutputStream out = null;
+        private Scanner sc = null;
+        private PrintWriter pr = null;
+        private String nickName = null;
+
+        public ConnectedClinet(Socket socket,String nickName) throws IOException {
+            System.out.println("Connect_Clinet_Constructor: "+nickName);
+            this.socket = socket;
+            this.nickName = nickName;
+
+            in = socket.getInputStream();
+            out = socket.getOutputStream();
+
+            sc = new Scanner(in);
+            pr = new PrintWriter(out);
+
+        }
+
+        @Override
+        public void run() {
+
+            synchronized (serverFrame) {
+                synchronized (this) {
+                    if(sc.hasNextLine()) {
+                        System.out.println("sc has = " + sc.hasNextLine());
+                        String move = sc.nextLine();
+                        System.out.println("odebrano " + move + " od " + nickName);
+                        for (Map.Entry<Socket, String> el : socket_NickName_Map.entrySet()) {
+                            if (!el.getValue().equals(nickName)) {
+                                PrintWriter pr = null;
+                                try {
+                                    pr = new PrintWriter(el.getKey().getOutputStream());
+                                    pr.println(move);
+                                    pr.flush();
+                                    //pr.close();
+                                    System.out.println("wyslano " + move + " do " + el.getValue());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
