@@ -63,8 +63,6 @@ public class Client {
             } catch (ConnectException connExc){
                 JOptionPane.showMessageDialog(null,"Client connection: "+connExc.getMessage());
                 FrameTicTacToe.getShowConnectionresult().setText("");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
 
         }catch(UnknownHostException unknowHostException){
@@ -74,28 +72,26 @@ public class Client {
         }
     }
 
-    public void ruch(int x) throws InterruptedException {
+    public void ruch(int x) {
 
-        //while(true) {
-            if (IS_YOUR_TURN) {
-                System.out.println("IS_YOU_TURN a = "+IS_YOUR_TURN);
-                pr.println(x);
-                pr.flush();
-                IS_YOUR_TURN = false;
-                FrameTicTacToe.enabledAllButtonOff();
-            } //else {
-                System.out.println("IS_YOU_TURN b = "+IS_YOUR_TURN);
-                if(sc.hasNextLine()){
-                    String move = sc.nextLine();
-                    System.out.println("odebrany move = "+move);
-                    IS_YOUR_TURN = true;
-                    FrameTicTacToe.enabledAllButtonOn();
-                    //break;
-                }
-        System.out.println("koniec");
-            //}
-            //Thread.sleep(100);
-        //}
+        if (IS_YOUR_TURN) {
+            System.out.println("IS_YOU_TURN a = "+IS_YOUR_TURN);
+            pr.println(x);
+            pr.flush();
+            IS_YOUR_TURN = false;
+            FrameTicTacToe.enabledAllButtonOff();
+        }
+
+        System.out.println("IS_YOU_TURN b = "+IS_YOUR_TURN);
+
+        if(sc.hasNextLine()){
+            String move = sc.nextLine();
+            System.out.println("odebrany move = "+move);
+            IS_YOUR_TURN = true;
+            FrameTicTacToe.enabledAllButtonOn();
+            //break;
+        }
+
     }
 
 
