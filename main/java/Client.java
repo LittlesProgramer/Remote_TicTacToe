@@ -37,8 +37,7 @@ public class Client {
 
             FrameTicTacToe.getShowConnectionresult().setText("waiting ...");
             try {
-                //client.connect(new InetSocketAddress(inet, port));
-                client.connect(new InetSocketAddress(InetAddress.getLocalHost(),12345));
+                client.connect(new InetSocketAddress(inet, port));
 
                 sc = new Scanner(client.getInputStream());
                 pr = new PrintWriter(client.getOutputStream());
