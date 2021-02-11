@@ -89,7 +89,6 @@ public class Client {
             System.out.println("odebrany move = "+move);
             IS_YOUR_TURN = true;
             FrameTicTacToe.enabledAllButtonOn();
-            //break;
         }
 
     }

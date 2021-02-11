@@ -23,11 +23,7 @@ public class YoursMoving implements ActionListener {
             if(el.getValue() == locationButton){
                 el.getKey().rysujFigure(Client.getFigureType());
 
-                try {
-                    client.ruch(locationButton);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                client.ruch(locationButton);
             }
         }
     }

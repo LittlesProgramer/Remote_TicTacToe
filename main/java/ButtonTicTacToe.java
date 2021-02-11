@@ -15,11 +15,9 @@ public class ButtonTicTacToe extends JButton {
     private Ellipse2D circle = new Ellipse2D.Double(X,Y,width,height);
 
     public void paintComponent(Graphics g){
-        //System.out.println("bo: "+bounds.getX()+" "+bounds.getWidth()+" "+bounds.getMinX()+" "+bounds.getCenterX());
-        //System.out.println("this: "+this.getWidth()+" "+this.getHeight()+" "+this.getMinimumSize()+" "+this.getMaximumSize()+" "+this.getPreferredSize());
+
         Graphics2D g2 = (Graphics2D)g;
 
-        //System.out.println("figura = "+figura);
         if(figura != null){
 
             if(figura.equals("Cross")){
