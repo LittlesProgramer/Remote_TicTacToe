@@ -21,11 +21,17 @@ public class YoursMoving implements ActionListener {
 
         for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){
             if(el.getValue() == locationButton){
-                el.getKey().rysujFigure(Client.getFigureType());
+                el.getKey().rysujFigure(Client.getFigureType(Client.getIsYourTurn()));
 
-                client.ruch(locationButton);
+                Thread t = new Thread(()->{
+                    client.ruch(locationButton);
+                });
+                t.start();
+                //t.interrupt();
             }
         }
+
+        System.out.println("location BUTTONING: "+locationButton);
     }
 
 }

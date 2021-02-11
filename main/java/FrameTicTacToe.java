@@ -1,10 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.Socket;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +25,6 @@ public class FrameTicTacToe extends JFrame {
     private static JLabel resultGameLabel = new JLabel("result your game: ");
 
     private static Map<ButtonTicTacToe,Integer> allButtonGameMap = new LinkedHashMap<>();//this map include all button and his number in the GamePanel
-    private Client client = null;
 
     public FrameTicTacToe() {
         //Layout configuration ...
@@ -59,7 +57,7 @@ public class FrameTicTacToe extends JFrame {
         connectingButton.addActionListener((actionEvent)->{
             if(checkCorrect_Ip_Port_NickName(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText())){
 
-                client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
+                Client client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
 
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert correct ip,port and nick values");
@@ -71,6 +69,7 @@ public class FrameTicTacToe extends JFrame {
     public void addButtonIntoGamePanel(){ //this method add all button in game panel
         GridLayout gridLayout = new GridLayout(3,3);
         gamePanel.setLayout(gridLayout);
+        gamePanel.setBackground(Color.GREEN);
         int size = gridLayout.getColumns() * gridLayout.getRows();
 
         ButtonTicTacToe buttonTicTacToe = null;
@@ -78,12 +77,22 @@ public class FrameTicTacToe extends JFrame {
             buttonTicTacToe = new ButtonTicTacToe();
             gamePanel.add(buttonTicTacToe);
             buttonTicTacToe.setPreferredSize(new Dimension(150,150));
-            buttonTicTacToe.setBackground(Color.ORANGE);
+            buttonTicTacToe.setForeground(Color.RED);
             buttonTicTacToe.setOpaque(false);
             allButtonGameMap.put(buttonTicTacToe,x+1);
         }
 
         enabledAllButtonOff();
+
+        /*for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
+            el.getKey().addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    el.getKey().rysujFigure("Cross");
+                    el.getKey().setEnabled(false);
+                }
+            });
+        }*/
     }
 
     public static void enabledAllButtonOff() {

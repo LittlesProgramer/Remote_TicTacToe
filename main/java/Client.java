@@ -13,7 +13,7 @@ public class Client {
     private static boolean YOUR_FIRST_MOVE = false; //if this variable is true draw cross figure, else is circle figure.
     private static Scanner sc = null;
     private static PrintWriter pr = null;
-    private boolean IS_YOUR_TURN = false;
+    private static boolean IS_YOUR_TURN = false;
 
     public Client(String ipAddress, String port, String nickName) {
         this.ipAddress = ipAddress;
@@ -37,7 +37,8 @@ public class Client {
 
             FrameTicTacToe.getShowConnectionresult().setText("waiting ...");
             try {
-                client.connect(new InetSocketAddress(inet, port));
+                //client.connect(new InetSocketAddress(inet, port));
+                client.connect(new InetSocketAddress(InetAddress.getLocalHost(),12345));
 
                 sc = new Scanner(client.getInputStream());
                 pr = new PrintWriter(client.getOutputStream());
@@ -72,39 +73,57 @@ public class Client {
         }
     }
 
-    public void ruch(int x) {
+    public void ruch(int move) {
 
         if (IS_YOUR_TURN) {
             System.out.println("IS_YOU_TURN a = "+IS_YOUR_TURN);
-            pr.println(x);
+
+            pr.println(move);
             pr.flush();
             IS_YOUR_TURN = false;
+
             FrameTicTacToe.enabledAllButtonOff();
         }
 
         System.out.println("IS_YOU_TURN b = "+IS_YOUR_TURN);
 
         if(sc.hasNextLine()){
-            String move = sc.nextLine();
-            System.out.println("odebrany move = "+move);
-            IS_YOUR_TURN = true;
+            int receiveMove = Integer.valueOf(sc.nextLine());
+            System.out.println("odebrany move = "+receiveMove);
             FrameTicTacToe.enabledAllButtonOn();
+
+            for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){
+                if(el.getValue() == receiveMove){
+                    el.getKey().rysujFigure(getFigureType(IS_YOUR_TURN));
+                    el.getKey().setEnabled(false);
+                }
+            }
+            IS_YOUR_TURN = true;
         }
 
     }
 
 
+    public static boolean getIsYourTurn(){ return IS_YOUR_TURN; }
     public static void setFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move
         if(whoMoveIsNow.equals("Start")){
             YOUR_FIRST_MOVE = true;
         }else{ YOUR_FIRST_MOVE = false; }
     }
 
-    public static String getFigureType(){
-        if(YOUR_FIRST_MOVE){
-            return "Cross";
+    public static String getFigureType(boolean whatFigureIs){
+        if(YOUR_FIRST_MOVE) {
+            if (whatFigureIs) {
+                return "Cross";
+            } else {
+                return "Circle";
+            }
         }else{
-            return "Circle";
+            if (whatFigureIs) {
+                return "Circle";
+            } else {
+                return "Cross";
+            }
         }
     }
 

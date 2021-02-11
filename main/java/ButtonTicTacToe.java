@@ -4,7 +4,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
 public class ButtonTicTacToe extends JButton {
-    private static String figura = null;
+
+    private String figura = null;
 
     private Rectangle bounds = this.getBounds();
     private double width = bounds.getWidth();
@@ -22,18 +23,17 @@ public class ButtonTicTacToe extends JButton {
 
             if(figura.equals("Cross")){
                 g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
-                figura = null;
+                //figura = null;
             }else if(figura.equals("Circle")){
                 g2.drawString("KOKOlino",50,50);
-                figura = null;
+                //figura = null;
             }
 
-        }else{
-            return;
         }
     }
 
     public void rysujFigure(String figura){
+        System.out.println("metoda rysuj figure "+figura);
         this.figura = figura;
         repaint();
     }
@@ -41,7 +41,5 @@ public class ButtonTicTacToe extends JButton {
     class Cross{
         private Line2D oneLine = new Line2D.Double();
         private Line2D twoLine = new Line2D.Double();
-
-
     }
 }
