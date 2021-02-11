@@ -8,11 +8,7 @@ public class Server {
     public static void main(String[] args){
         EventQueue.invokeLater(()->{
             ServerFrame frame = null;
-            try {
-                frame = new ServerFrame();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            frame = new ServerFrame();
             frame.setTitle("Server Game TicTacToe");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
@@ -29,13 +25,9 @@ class ServerFrame extends JFrame {
     private JTextArea playerInfoView = new JTextArea(10,35);
     private Map<Socket,String> socket_NickName_Map = new LinkedHashMap<>();
     private Map<Thread,Map<Socket,String>> threadMapMap = new LinkedHashMap<>();
-    private static String firstLoggedPlayer = "";
-    private static boolean IS_YOUR_TURN = false;
-    private boolean THE_END = false;
-    private ServerFrame serverFrame = null;
 
-    public ServerFrame() throws IOException {
-        serverFrame = this;
+    public ServerFrame() {
+
         GridBagLayout gridBagLayout = new GridBagLayout();
         this.setLayout(gridBagLayout);
         panel.setLayout(gridBagLayout);
@@ -53,7 +45,6 @@ class ServerFrame extends JFrame {
         startServer.addActionListener((actionEvent)->{
             try {
                 ServerSocket server = new ServerSocket(12345);
-                //server.bind(new InetSocketAddress("HP",12345));
                 System.out.println("waiting ...");
                 Thread t = new Thread(()->{
                     try {
@@ -67,11 +58,6 @@ class ServerFrame extends JFrame {
                             Thread connectClinet = new Thread(new ConnectedClinet(socket,nickName));
                             socket_NickName_Map.put(socket,nickName);
                             threadMapMap.put(connectClinet,socket_NickName_Map);
-
-                            if(x == 0){
-                                firstLoggedPlayer = nickName;
-                                IS_YOUR_TURN = true;
-                            }
                         }
 
                         for(int x = 0 ; x < 2 ; x++){
@@ -111,7 +97,7 @@ class ServerFrame extends JFrame {
         private String nickName = null;
 
         public ConnectedClinet(Socket socket,String nickName) throws IOException {
-            System.out.println("Connect_Clinet_Constructor: "+nickName);
+
             this.socket = socket;
             this.nickName = nickName;
 
@@ -125,30 +111,27 @@ class ServerFrame extends JFrame {
 
         @Override
         public void run() {
+            while(true) {
 
-            synchronized (serverFrame) {
-                synchronized (this) {
-                    if(sc.hasNextLine()) {
-                        System.out.println("sc has = " + sc.hasNextLine());
-                        String move = sc.nextLine();
-                        System.out.println("odebrano " + move + " od " + nickName);
-                        for (Map.Entry<Socket, String> el : socket_NickName_Map.entrySet()) {
-                            if (!el.getValue().equals(nickName)) {
-                                PrintWriter pr = null;
-                                try {
-                                    pr = new PrintWriter(el.getKey().getOutputStream());
-                                    pr.println(move);
-                                    pr.flush();
-                                    //pr.close();
-                                    System.out.println("wyslano " + move + " do " + el.getValue());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
+                if (sc.hasNextLine()) {
+                    String move = sc.nextLine();
+                    System.out.println("odebrano " + move + " od " + nickName);
+                    for (Map.Entry<Socket, String> el : socket_NickName_Map.entrySet()) {
+                        if (!el.getValue().equals(nickName)) {
+                            PrintWriter pr = null;
+                            try {
+                                pr = new PrintWriter(el.getKey().getOutputStream());
+                                pr.println(move);
+                                pr.flush();
+                                System.out.println("wyslano " + move + " do " + el.getValue());
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
+
                         }
                     }
                 }
+
             }
         }
     }

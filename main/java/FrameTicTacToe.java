@@ -26,6 +26,7 @@ public class FrameTicTacToe extends JFrame {
     private static JLabel resultGameLabel = new JLabel("result your game: ");
 
     private static Map<ButtonTicTacToe,Integer> allButtonGameMap = new LinkedHashMap<>();//this map include all button and his number in the GamePanel
+    private Client client = null;
 
     public FrameTicTacToe() {
         //Layout configuration ...
@@ -58,7 +59,7 @@ public class FrameTicTacToe extends JFrame {
         connectingButton.addActionListener((actionEvent)->{
             if(checkCorrect_Ip_Port_NickName(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText())){
 
-                Client client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
+                client = new Client(ipTextField.getText(),portTextField.getText(),nickNameTextField.getText());
 
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert correct ip,port and nick values");
@@ -73,14 +74,13 @@ public class FrameTicTacToe extends JFrame {
         int size = gridLayout.getColumns() * gridLayout.getRows();
 
         ButtonTicTacToe buttonTicTacToe = null;
-        for(int x = 1 ; x < size ; x++){
+        for(int x = 0 ; x < size ; x++){
             buttonTicTacToe = new ButtonTicTacToe();
             gamePanel.add(buttonTicTacToe);
             buttonTicTacToe.setPreferredSize(new Dimension(150,150));
             buttonTicTacToe.setBackground(Color.ORANGE);
             buttonTicTacToe.setOpaque(false);
-            allButtonGameMap.put(buttonTicTacToe,x);
-            buttonTicTacToe.addActionListener(new YoursMoving(x));
+            allButtonGameMap.put(buttonTicTacToe,x+1);
         }
 
         enabledAllButtonOff();

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.net.*;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Client {
     private static String ipAddress = null;
@@ -12,7 +13,7 @@ public class Client {
     private static boolean YOUR_FIRST_MOVE = false; //if this variable is true draw cross figure, else is circle figure.
     private static Scanner sc = null;
     private static PrintWriter pr = null;
-    private static boolean IS_YOUR_TURN = false;
+    private boolean IS_YOUR_TURN = false;
 
     public Client(String ipAddress, String port, String nickName) {
         this.ipAddress = ipAddress;
@@ -22,6 +23,7 @@ public class Client {
         Thread clientStartThread = new Thread(()->{
             connectToServer(ipAddress, Integer.valueOf(port));
         });
+        this.addActionLitenerIntoButtonTicTacToe();
         clientStartThread.start();
 
     }
@@ -46,67 +48,17 @@ public class Client {
                 pr.println(nickName);
                 pr.flush();
 
-                System.out.println("1");
                 String firstStartMove = sc.nextLine();
-                System.out.println("2 = "+firstStartMove);
+                System.out.println("start = "+firstStartMove);
                 setFirstMove(firstStartMove);//set first move YOUR_FIRST_MOVE variable
 
-
                 if(YOUR_FIRST_MOVE){
-                    FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your first move cross");
-                    Thread.sleep(500);
                     FrameTicTacToe.enabledAllButtonOn();
-                    IS_YOUR_TURN = false;
-
-                    while(true){
-                        //System.out.println("petla");
-                        if(IS_YOUR_TURN){
-                            break;
-                        }
-                    }
-                    System.out.println("opusczono pętle");
-
+                    IS_YOUR_TURN = true;
                 }else{
-
-                    FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your opponent first move");
-                    FrameTicTacToe.enabledAllButtonOff();
-                    Thread.sleep(500);
-                    String yourOpponentMoveNumber = sc.nextLine();
-                    System.out.println("otrzymany ruch to = "+yourOpponentMoveNumber+" ale nie z nicku: "+nickName);
-                    logicMove(Integer.parseInt(yourOpponentMoveNumber));
+                    ruch(0);
                 }
 
-
-                while(true) {
-
-                    if(IS_YOUR_TURN){
-
-                        FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your move");
-                        Thread.sleep(500);
-                        FrameTicTacToe.enabledAllButtonOn();
-                        IS_YOUR_TURN = false;
-
-                        while(true){
-                            //System.out.println("petla");
-                            if(IS_YOUR_TURN){
-                                break;
-                            }
-                        }
-                        IS_YOUR_TURN = false;
-
-                    }else{
-
-                        FrameTicTacToe.getResultGameLabel().setText("result your game: "+"Your opponent move");
-                        FrameTicTacToe.enabledAllButtonOff();
-                        Thread.sleep(500);
-                        String yourOpponentMoveNumber = sc.nextLine();
-                        logicMove(Integer.parseInt(yourOpponentMoveNumber));
-
-                        IS_YOUR_TURN = true;
-
-                    }
-
-                }
 
             } catch (ConnectException connExc){
                 JOptionPane.showMessageDialog(null,"Client connection: "+connExc.getMessage());
@@ -114,6 +66,7 @@ public class Client {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }catch(UnknownHostException unknowHostException){
             JOptionPane.showMessageDialog(null,"Unknown Host :"+unknowHostException.getMessage());
         }catch(IOException ioExc){
@@ -121,29 +74,30 @@ public class Client {
         }
     }
 
-    public static void logicMove(int move) {//this method generate first move drawing Cross depending on return value whoFirstMove() method
+    public void ruch(int x) throws InterruptedException {
 
-        if(IS_YOUR_TURN){//if first move drawing your figure cross,now CROSS is YOUR BASE figure
-
-            String moves = String.valueOf(move);
-            pr.println(moves);
-            pr.flush();
-            System.out.println("Clinet = "+nickName+" wyslal = "+moves);
-
-            FrameTicTacToe.enabledAllButtonOff();
-            IS_YOUR_TURN = false;
-
-
-        }else{//if first move doing your opponent he drawing cross ,and your BASE figure is CIRCLE
-
-            for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){//draw move your opponent on the button in GamePanel
-                if(el.getValue() == Integer.valueOf(move)) { //3 is temp move your opponent after must be automatic move
-                    el.getKey().rysujFigure(Client.getFigureType());
+        //while(true) {
+            if (IS_YOUR_TURN) {
+                System.out.println("IS_YOU_TURN a = "+IS_YOUR_TURN);
+                pr.println(x);
+                pr.flush();
+                IS_YOUR_TURN = false;
+                FrameTicTacToe.enabledAllButtonOff();
+            } //else {
+                System.out.println("IS_YOU_TURN b = "+IS_YOUR_TURN);
+                if(sc.hasNextLine()){
+                    String move = sc.nextLine();
+                    System.out.println("odebrany move = "+move);
+                    IS_YOUR_TURN = true;
+                    FrameTicTacToe.enabledAllButtonOn();
+                    //break;
                 }
-            }
-            IS_YOUR_TURN = true;
-        }
+        System.out.println("koniec");
+            //}
+            //Thread.sleep(100);
+        //}
     }
+
 
     public static void setFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move
         if(whoMoveIsNow.equals("Start")){
@@ -159,8 +113,11 @@ public class Client {
         }
     }
 
-    public static void setIsYourTurn(){ IS_YOUR_TURN = true; }
     //public static boolean whoFirstMove(){ return YOUR_FIRST_MOVE; }//this method return variable who those is responsible for first move cross or circle(TRUE=CROSS)
-    public static Scanner getScanner(){ return sc; }
-    public static PrintWriter getPrintWriter(){ return pr; }
+    public void addActionLitenerIntoButtonTicTacToe(){
+        for(int x = 0 ; x < FrameTicTacToe.getAllButtonGameMap().size() ; x++){
+            ButtonTicTacToe b = (ButtonTicTacToe) FrameTicTacToe.getAllButtonGameMap().keySet().toArray()[x];
+            b.addActionListener(new YoursMoving(this,x+1));
+        }
+    }
 }

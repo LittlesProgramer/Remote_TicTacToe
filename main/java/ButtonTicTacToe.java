@@ -1,5 +1,3 @@
-import javafx.geometry.Bounds;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -23,8 +21,6 @@ public class ButtonTicTacToe extends JButton {
 
         //System.out.println("figura = "+figura);
         if(figura != null){
-
-            System.out.println("painting");
 
             if(figura.equals("Cross")){
                 g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
