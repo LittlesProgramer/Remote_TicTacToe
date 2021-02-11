@@ -54,8 +54,10 @@ public class Client {
 
                 if(YOUR_FIRST_MOVE){
                     FrameTicTacToe.enabledAllButtonOn();
+                    FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
                     IS_YOUR_TURN = true;
                 }else{
+                    FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your opponent move now");
                     ruch(0);
                 }
 
@@ -75,20 +77,18 @@ public class Client {
     public void ruch(int move) {
 
         if (IS_YOUR_TURN) {
-            System.out.println("IS_YOU_TURN a = "+IS_YOUR_TURN);
+            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
 
             pr.println(move);
             pr.flush();
             IS_YOUR_TURN = false;
 
             FrameTicTacToe.enabledAllButtonOff();
+            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your opponent move now");
         }
-
-        System.out.println("IS_YOU_TURN b = "+IS_YOUR_TURN);
 
         if(sc.hasNextLine()){
             int receiveMove = Integer.valueOf(sc.nextLine());
-            System.out.println("odebrany move = "+receiveMove);
             FrameTicTacToe.enabledAllButtonOn();
 
             for(Map.Entry<ButtonTicTacToe,Integer> el: FrameTicTacToe.getAllButtonGameMap().entrySet()){
@@ -98,6 +98,7 @@ public class Client {
                 }
             }
             IS_YOUR_TURN = true;
+            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
         }
 
     }
