@@ -83,16 +83,6 @@ public class FrameTicTacToe extends JFrame {
         }
 
         enabledAllButtonOff();
-
-        /*for(Map.Entry<ButtonTicTacToe,Integer> el: allButtonGameMap.entrySet()){
-            el.getKey().addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    el.getKey().rysujFigure("Cross");
-                    el.getKey().setEnabled(false);
-                }
-            });
-        }*/
     }
 
     public static void enabledAllButtonOff() {
