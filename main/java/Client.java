@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Client {
     private static String ipAddress = null;
@@ -14,6 +12,9 @@ public class Client {
     private static Scanner sc = null;
     private static PrintWriter pr = null;
     private static boolean IS_YOUR_TURN = false;
+
+    private static List<Integer> listAllYourMove = new LinkedList<>();
+    private static List<Integer> listAllYourOpponentMove = new LinkedList<>();
 
     public Client(String ipAddress, String port, String nickName) {
         this.ipAddress = ipAddress;
@@ -76,17 +77,23 @@ public class Client {
 
     public void ruch(int move) {
 
+        //is you turn now
         if (IS_YOUR_TURN) {
             FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
+
 
             pr.println(move);
             pr.flush();
             IS_YOUR_TURN = false;
 
+            addYourMoveToList(move);
+            if(isItWinningMove(IS_YOUR_TURN))
+
             FrameTicTacToe.enabledAllButtonOff();
             FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your opponent move now");
         }
 
+        //is your opponent move now
         if(sc.hasNextLine()){
             int receiveMove = Integer.valueOf(sc.nextLine());
             FrameTicTacToe.enabledAllButtonOn();
@@ -103,15 +110,19 @@ public class Client {
 
     }
 
+    private boolean isItWinningMove(boolean isYourTurn) {
+        //if isYourTurn variable true we analized listAllYourMove map otherwise listAllYourOpponentMove.
 
-    public static boolean getIsYourTurn(){ return IS_YOUR_TURN; }
-    public static void setFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move
-        if(whoMoveIsNow.equals("Start")){
-            YOUR_FIRST_MOVE = true;
-        }else{ YOUR_FIRST_MOVE = false; }
     }
 
-    public static String getFigureType(boolean whatFigureIs){
+    private static void setFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move
+        if(whoMoveIsNow.equals("Start")){
+            YOUR_FIRST_MOVE = true; // if YOURS_FIRST_MOVE is true you have cross figure
+        }else{ YOUR_FIRST_MOVE = false; } // else circle figure
+    }
+    protected static boolean getIsYourTurn(){ return IS_YOUR_TURN; } //this method return true if is your move or false if your opponent
+
+    protected static String getFigureType(boolean whatFigureIs){
         if(YOUR_FIRST_MOVE) {
             if (whatFigureIs) {
                 return "Cross";
@@ -128,10 +139,12 @@ public class Client {
     }
 
     //public static boolean whoFirstMove(){ return YOUR_FIRST_MOVE; }//this method return variable who those is responsible for first move cross or circle(TRUE=CROSS)
-    public void addActionLitenerIntoButtonTicTacToe(){
+    private void addActionLitenerIntoButtonTicTacToe(){
         for(int x = 0 ; x < FrameTicTacToe.getAllButtonGameMap().size() ; x++){
             ButtonTicTacToe b = (ButtonTicTacToe) FrameTicTacToe.getAllButtonGameMap().keySet().toArray()[x];
             b.addActionListener(new YoursMoving(this,x+1));
         }
     }
+    private void addYourMoveToList(int yourMove){ listAllYourMove.add(yourMove); }
+    private void addYourOpponentMoveToList(int yourOpponentMove){ listAllYourOpponentMove.add(yourOpponentMove); }
 }

@@ -7,8 +7,6 @@ import java.util.Map;
 public class YoursMoving implements ActionListener {
 
     private Client client = null;
-    private static List<Integer> listAllYourMove = new LinkedList<>();
-    private static List<Integer> listAllYourOpponentMove = new LinkedList<>();
     private int locationButton = 0;
 
     public YoursMoving(Client client,int locationButton) {
@@ -27,7 +25,7 @@ public class YoursMoving implements ActionListener {
                     client.ruch(locationButton);
                 });
                 t.start();
-                //t.interrupt();
+                t.interrupt();
             }
         }
 
