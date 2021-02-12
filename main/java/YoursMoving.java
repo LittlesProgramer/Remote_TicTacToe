@@ -1,7 +1,5 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class YoursMoving implements ActionListener {
@@ -29,7 +27,7 @@ public class YoursMoving implements ActionListener {
             }
         }
 
-        System.out.println("location BUTTONING: "+locationButton);
+        //System.out.println("location BUTTONING: "+locationButton);
     }
 
 }

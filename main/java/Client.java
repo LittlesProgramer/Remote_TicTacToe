@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 
@@ -84,18 +85,21 @@ public class Client {
 
             pr.println(move);
             pr.flush();
-            IS_YOUR_TURN = false;
 
-            //add your move into map and checked your winning
+            //add your move into map and checked your winning move
             addYourMoveToList(move);
-            if(isItWinningMove(IS_YOUR_TURN))
+            if(isItWinningMove(IS_YOUR_TURN)){
+                System.out.println("you are winners");
+            }
 
+            IS_YOUR_TURN = false;
             FrameTicTacToe.enabledAllButtonOff();
             FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your opponent move now");
         }
 
         //is your opponent move now
         if(sc.hasNextLine()){
+
             int receiveMove = Integer.valueOf(sc.nextLine());
             FrameTicTacToe.enabledAllButtonOn();
 
@@ -105,6 +109,13 @@ public class Client {
                     el.getKey().setEnabled(false);
                 }
             }
+
+            //add your move opponent into map and checkeing your opponent is winner
+            addYourOpponentMoveToList(receiveMove);
+            if(isItWinningMove(IS_YOUR_TURN)){
+                System.out.println("you opponent are winners");
+            }
+
             IS_YOUR_TURN = true;
             FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
         }
@@ -112,8 +123,58 @@ public class Client {
     }
 
     private boolean isItWinningMove(boolean isYourTurn) {
-        //if isYourTurn variable true we analized listAllYourMove map otherwise listAllYourOpponentMove.
 
+        boolean win = false;
+        //if variable isYourTurn true we must checking all your moves else we checking all moves your opponent
+
+        //all winning configuration moves
+        //horizontal pozition: 123,456,789
+        //vertical pozition: 147,258,369
+        //cross pozition: 159,357
+        String allWinningConfigurationTab[] = new String[]{"123","456","789","147","258","369","159","357"};
+        String allYourMovesString = "";
+        String allYourOpponentMoveString = "";
+
+        if(isYourTurn){
+
+            //add all you moves into allYourMovesString String type variable
+            for(Integer el: listAllYourMove){
+                allYourMovesString = allYourMovesString + String.valueOf(el);
+            }
+
+            //sorted all char in allYourMovesString
+            char allYourMovesTab[] = allYourMovesString.toCharArray();
+            Arrays.sort(allYourMovesTab);
+            allYourMovesString = new String(allYourMovesTab);
+
+            //checking that allYourMovesString contains one of the variable from allWinningConfigurationTab table
+            for(String el : allWinningConfigurationTab){
+                if(allYourMovesString.contains(el)){
+                    win = true;
+                }
+            }
+
+        }else{
+
+            //add all you moves into allYourMovesString String type variable
+            for(Integer el: listAllYourOpponentMove){
+                allYourOpponentMoveString = allYourOpponentMoveString + String.valueOf(el);
+            }
+
+            //sorted all char in allYourMovesString
+            char allYourOpponentMovesTab[] = allYourOpponentMoveString.toCharArray();
+            Arrays.sort(allYourOpponentMovesTab);
+            allYourOpponentMoveString = new String(allYourOpponentMovesTab);
+
+            //checking that allYourMovesString contains one of the variable from allWinningConfigurationTab table
+            for(String el : allWinningConfigurationTab){
+                if(allYourOpponentMoveString.contains(el)){
+                    win = true;
+                }
+            }
+        }
+
+        return win;
     }
 
     private static void setFirstMove(String whoMoveIsNow){//this method get from the server start move if get Start then you have first move

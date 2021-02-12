@@ -33,7 +33,7 @@ public class ButtonTicTacToe extends JButton {
     }
 
     public void rysujFigure(String figura){
-        System.out.println("metoda rysuj figure "+figura);
+        //System.out.println("metoda rysuj figure "+figura);
         this.figura = figura;
         repaint();
     }
