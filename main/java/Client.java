@@ -86,6 +86,7 @@ public class Client {
             pr.flush();
             IS_YOUR_TURN = false;
 
+            //add your move into map and checked your winning
             addYourMoveToList(move);
             if(isItWinningMove(IS_YOUR_TURN))
 
