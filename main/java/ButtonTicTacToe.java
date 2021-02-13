@@ -15,6 +15,8 @@ public class ButtonTicTacToe extends JButton {
 
     private Ellipse2D circle = new Ellipse2D.Double(X,Y,width,height);
 
+    private Line2D line2D = null;
+
     public void paintComponent(Graphics g){
 
         Graphics2D g2 = (Graphics2D)g;
@@ -27,14 +29,27 @@ public class ButtonTicTacToe extends JButton {
             }else if(figura.equals("Circle")){
                 g2.drawString("KOKOlino",50,50);
                 //figura = null;
+            }else if(figura.equals("Horizontal")){
+                g2.draw(line2D);
+            }else if(figura.equals("Vertical")){
+                g2.draw(line2D);
+            }else if(figura.equals("Cross I")){
+                g2.draw(line2D);
+            }else if(figura.equals("Cross II")){
+                g2.draw(line2D);
             }
 
         }
     }
 
     public void rysujFigure(String figura){
-        //System.out.println("metoda rysuj figure "+figura);
         this.figura = figura;
+        repaint();
+    }
+
+    public void rysujFigure(String figura,Line2D line2D){
+        this.figura = figura;
+        this.line2D = line2D;
         repaint();
     }
 

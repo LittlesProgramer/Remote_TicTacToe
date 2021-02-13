@@ -16,6 +16,7 @@ public class Client {
 
     private static List<Integer> listAllYourMove = new LinkedList<>();
     private static List<Integer> listAllYourOpponentMove = new LinkedList<>();
+    private static String winingString = "";//these variable store configuration all winned figures ( cross or circle)
 
     public Client(String ipAddress, String port, String nickName) {
         this.ipAddress = ipAddress;
@@ -90,6 +91,7 @@ public class Client {
             addYourMoveToList(move);
             if(isItWinningMove(IS_YOUR_TURN)){
                 System.out.println("you are winners");
+                drawWinningLine(winingString);
             }
 
             IS_YOUR_TURN = false;
@@ -122,10 +124,19 @@ public class Client {
 
     }
 
-    private boolean isItWinningMove(boolean isYourTurn) {
+    private void drawWinningLine(String winingStringMoves) {
+        //all winning configuration moves
+        //horizontal pozition: 123,456,789
+        //vertical pozition: 147,258,369
+        //cross pozition: 159,357
 
-        boolean win = false;
+
+    }
+
+    private boolean isItWinningMove(boolean isYourTurn) {
         //if variable isYourTurn true we must checking all your moves else we checking all moves your opponent
+
+        boolean win = false;//variable win == true if allYourOpponentMoveString contains one of allWinningConfigurationTab value;
 
         //all winning configuration moves
         //horizontal pozition: 123,456,789
@@ -150,6 +161,7 @@ public class Client {
             //checking that allYourMovesString contains one of the variable from allWinningConfigurationTab table
             for(String el : allWinningConfigurationTab){
                 if(allYourMovesString.contains(el)){
+                    winingString = el;
                     win = true;
                 }
             }
@@ -169,6 +181,7 @@ public class Client {
             //checking that allYourMovesString contains one of the variable from allWinningConfigurationTab table
             for(String el : allWinningConfigurationTab){
                 if(allYourOpponentMoveString.contains(el)){
+                    winingString = el;
                     win = true;
                 }
             }
