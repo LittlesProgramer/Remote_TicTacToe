@@ -92,11 +92,14 @@ public class Client {
             if(isItWinningMove(IS_YOUR_TURN)){
                 System.out.println("you are winners");
                 drawWinningLine(winingString,getFigureType(IS_YOUR_TURN));
-            }
+                FrameTicTacToe.getResultGameLabel().setText("result your game: "+"you are winners");
+                FrameTicTacToe.enabledAllButtonOff();
+            }else {
 
-            IS_YOUR_TURN = false;
-            FrameTicTacToe.enabledAllButtonOff();
-            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your opponent move now");
+                IS_YOUR_TURN = false;
+                FrameTicTacToe.enabledAllButtonOff();
+                FrameTicTacToe.getResultGameLabel().setText("result your game: " + "is your opponent move now");
+            }
         }
 
         //is your opponent move now
@@ -117,10 +120,12 @@ public class Client {
             if(isItWinningMove(IS_YOUR_TURN)){
                 System.out.println("you opponent are winners");
                 drawWinningLine(winingString,getFigureType(IS_YOUR_TURN));
+                FrameTicTacToe.getResultGameLabel().setText("result your game: "+"you opponent are winners");
+                FrameTicTacToe.enabledAllButtonOff();
+            }else {
+                IS_YOUR_TURN = true;
+                FrameTicTacToe.getResultGameLabel().setText("result your game: " + "is your move now");
             }
-
-            IS_YOUR_TURN = true;
-            FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
         }
 
     }
