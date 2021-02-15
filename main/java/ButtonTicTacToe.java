@@ -45,31 +45,34 @@ public class ButtonTicTacToe extends JButton {
         if(figura != null){
 
             if(figura.equals("Cross")){
-                g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
-                //figura = null;
+                g2.draw(line2D_CrossI);
+                g2.draw(line2D_CrossII);
             }else if(figura.equals("Circle")){
                 g2.draw(circle);
-                //figura = null;
             }else if(figura.equals("Cross+Horizontal")){
-                g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
+                g2.draw(line2D_CrossI);
+                g2.draw(line2D_CrossII);
                 g2.draw(line2D_Horizontal);
             }else if(figura.equals("Circle+Horizontal")){
                 g2.draw(circle);
                 g2.draw(line2D_Horizontal);
             }else if(figura.equals("Cross+Vertical")){
-                g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
+                g2.draw(line2D_CrossI);
+                g2.draw(line2D_CrossII);
                 g2.draw(line2D_Vertical);
             }else if(figura.equals("Circle+Vertical")){
                 g2.draw(circle);
                 g2.draw(line2D_Vertical);
             }else if(figura.equals("Cross+Cross I")){
-                g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
+                g2.draw(line2D_CrossI);
+                g2.draw(line2D_CrossII);
                 g2.draw(line2D_CrossI);
             }else if(figura.equals("Circle+Cross I")){
                 g2.draw(circle);
                 g2.draw(line2D_CrossI);
             }else if(figura.equals("Cross+Cross II")){
-                g2.draw(new Ellipse2D.Double(0,0,this.getWidth()-10,this.getHeight()-10));
+                g2.draw(line2D_CrossI);
+                g2.draw(line2D_CrossII);
                 g2.draw(line2D_CrossII);
             }else if(figura.equals("Circle+Cross II")){
                 g2.draw(circle);
@@ -82,10 +85,5 @@ public class ButtonTicTacToe extends JButton {
     public void rysujFigure(String figura){
         this.figura = figura;
         repaint();
-    }
-
-    class Cross{
-        private Line2D oneLine = new Line2D.Double();
-        private Line2D twoLine = new Line2D.Double();
     }
 }
