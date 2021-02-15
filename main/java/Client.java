@@ -149,26 +149,26 @@ public class Client {
         for(String el: listAllWinningString){
             if(el.equals(winingStringMoves)){
                 if("123456789".contains(el)){
-                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Horizontal");
+                    chooseDirectionAndDrawingLine(winingStringMoves,crossOrCircle,"Horizontal");
                 }
 
                 if("147258369".contains(el)){
-                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Vertical");
+                    chooseDirectionAndDrawingLine(winingStringMoves,crossOrCircle,"Vertical");
                 }
 
                 if("159".contains(el)){
-                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Cross I");
+                    chooseDirectionAndDrawingLine(winingStringMoves,crossOrCircle,"Cross I");
                 }
 
                 if("357".contains(el)){
-                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Cross II");
+                    chooseDirectionAndDrawingLine(winingStringMoves,crossOrCircle,"Cross II");
                 }
             }
         }
 
     }
 
-    private void chooseDirectionAndDrawingLine(ArrayList<String> listAllWinningString, String winingStringMoves, String crossOrCircle,String dirctionLine) {
+    private void chooseDirectionAndDrawingLine(String winingStringMoves, String crossOrCircle,String dirctionLine) {
         for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
             for(char chars: winingStringMoves.toCharArray()){
                 int button = Integer.valueOf(String.valueOf(chars));
