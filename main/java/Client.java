@@ -149,72 +149,39 @@ public class Client {
         for(String el: listAllWinningString){
             if(el.equals(winingStringMoves)){
                 if("123456789".contains(el)){
-
-                    for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
-                        for(char chars: winingStringMoves.toCharArray()){
-                            int button = Integer.valueOf(String.valueOf(chars));
-                            if(button == buttons.getValue()){
-
-                                if(crossOrCircle.equals("Cross")){
-                                    buttons.getKey().rysujFigure("Cross+Horizontal");
-                                }else{
-                                    buttons.getKey().rysujFigure("Circle+Horizontal");
-                                }
-                            }
-                        }
-                    }
+                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Horizontal");
                 }
 
                 if("147258369".contains(el)){
-                    for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
-                        for(char chars: winingStringMoves.toCharArray()){
-                            int button = Integer.valueOf(String.valueOf(chars));
-                            if(button == buttons.getValue()){
-
-                                if(crossOrCircle.equals("Cross")){
-                                    buttons.getKey().rysujFigure("Cross+Vertical");
-                                }else{
-                                    buttons.getKey().rysujFigure("Circle+Vertical");
-                                }
-                            }
-                        }
-                    }
+                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Vertical");
                 }
 
                 if("159".contains(el)){
-                    for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
-                        for(char chars: winingStringMoves.toCharArray()){
-                            int button = Integer.valueOf(String.valueOf(chars));
-                            if(button == buttons.getValue()){
-
-                                if(crossOrCircle.equals("Cross")){
-                                    buttons.getKey().rysujFigure("Cross+Cross I");
-                                }else{
-                                    buttons.getKey().rysujFigure("Circle+Cross I");
-                                }
-                            }
-                        }
-                    }
+                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Cross I");
                 }
 
                 if("357".contains(el)){
-                    for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
-                        for(char chars: winingStringMoves.toCharArray()){
-                            int button = Integer.valueOf(String.valueOf(chars));
-                            if(button == buttons.getValue()){
-
-                                if(crossOrCircle.equals("Cross")){
-                                    buttons.getKey().rysujFigure("Cross+Cross II");
-                                }else{
-                                    buttons.getKey().rysujFigure("Circle+Cross II");
-                                }
-                            }
-                        }
-                    }
+                    chooseDirectionAndDrawingLine(listAllWinningString,winingStringMoves,crossOrCircle,"Cross II");
                 }
             }
         }
 
+    }
+
+    private void chooseDirectionAndDrawingLine(ArrayList<String> listAllWinningString, String winingStringMoves, String crossOrCircle,String dirctionLine) {
+        for(Map.Entry<ButtonTicTacToe,Integer> buttons: FrameTicTacToe.getAllButtonGameMap().entrySet()){
+            for(char chars: winingStringMoves.toCharArray()){
+                int button = Integer.valueOf(String.valueOf(chars));
+                if(button == buttons.getValue()){
+
+                    if(crossOrCircle.equals("Cross")){
+                        buttons.getKey().rysujFigure("Cross+"+dirctionLine);
+                    }else{
+                        buttons.getKey().rysujFigure("Circle+"+dirctionLine);
+                    }
+                }
+            }
+        }
     }
 
     private boolean isItWinningMove(boolean isYourTurn) {
