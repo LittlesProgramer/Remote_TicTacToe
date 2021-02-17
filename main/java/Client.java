@@ -83,7 +83,6 @@ public class Client {
         if (IS_YOUR_TURN) {
             FrameTicTacToe.getResultGameLabel().setText("result your game: "+"is your move now");
 
-
             pr.println(move);
             pr.flush();
 
@@ -189,10 +188,10 @@ public class Client {
         }
     }
 
-    private boolean isItWinningMove(boolean isYourTurn) {
-        //if variable isYourTurn true we must checking all your moves else we checking all moves your opponent
+    public boolean isItWinningMove(boolean isYourTurn) {
+        //if variable isYourTurn = true we must checking all your moves, else we checking all moves your opponent
 
-        boolean win = false;//variable win == true if allYourOpponentMoveString contains one of allWinningConfigurationTab value;
+        boolean win = false;//variable win == true if allYourOpponentMoveString variable contains one of allWinningConfigurationTab value;
 
         //all winning configuration moves
         //horizontal pozition: 123,456,789

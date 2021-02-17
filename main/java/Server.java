@@ -115,7 +115,7 @@ class ServerFrame extends JFrame {
 
                 if (sc.hasNextLine()) {
                     String move = sc.nextLine();
-                    System.out.println("odebrano " + move + " od " + nickName);
+
                     for (Map.Entry<Socket, String> el : socket_NickName_Map.entrySet()) {
                         if (!el.getValue().equals(nickName)) {
                             PrintWriter pr = null;
@@ -123,11 +123,9 @@ class ServerFrame extends JFrame {
                                 pr = new PrintWriter(el.getKey().getOutputStream());
                                 pr.println(move);
                                 pr.flush();
-                                System.out.println("wyslano " + move + " do " + el.getValue());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
                 }
