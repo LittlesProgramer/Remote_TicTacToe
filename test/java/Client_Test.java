@@ -17,4 +17,10 @@ class Client_Test {
         // variables therefore in this case we testing this method always give false result
         Assertions.assertEquals(false,c.isItWinningMove(false));
     }
+
+    void getFigureType_Test(){
+        // if YOUR_FIRST_MOVE = (default is false) and whatFigureIs = true then your figur type is Circle
+        // else if whatFigureIs = false, then your figur type is Cross
+        Assertions.assertEquals("Circle",Client.getFigureType(true));
+    }
 }

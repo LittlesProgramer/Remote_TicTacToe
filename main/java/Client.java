@@ -253,6 +253,7 @@ public class Client {
     protected static boolean getIsYourTurn(){ return IS_YOUR_TURN; } //this method return true if is your move or false if your opponent
 
     protected static String getFigureType(boolean whatFigureIs){
+        //if whatFigureIs = true and YOUR_FIRST_MOVE = true(default is false) then your figur type is Cross
         if(YOUR_FIRST_MOVE) {
             if (whatFigureIs) {
                 return "Cross";
