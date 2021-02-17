@@ -43,18 +43,19 @@ class ServerFrame extends JFrame {
         pack();
 
         startServer.addActionListener((actionEvent)->{
+            startServer.setEnabled(false);
             try {
                 ServerSocket server = new ServerSocket(12345);
-                System.out.println("waiting ...");
+                startServerInfoView.setText("waiting ...");
                 Thread t = new Thread(()->{
                     try {
 
                         for(int x = 0 ; x < 2 ; x++){
                             Socket socket = server.accept();
-                            System.out.println("connected...");
+                            startServerInfoView.setText("connected ...");
                             Scanner sc = new Scanner(socket.getInputStream());
                             String nickName = sc.nextLine();
-                            System.out.println("nicki = "+nickName);
+                            playerInfoView.append("nr:"+(x+1)+" "+nickName+" ip:"+socket.getRemoteSocketAddress()+"\n");
                             Thread connectClinet = new Thread(new ConnectedClinet(socket,nickName));
                             socket_NickName_Map.put(socket,nickName);
                             threadMapMap.put(connectClinet,socket_NickName_Map);
